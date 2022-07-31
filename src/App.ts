@@ -1,9 +1,6 @@
-// import { Main } from './Components/Main';
-// import { Header } from './Components/Header';
-// import { Services } from './Service/Service';
-// import { StoreService } from './Service/StoreService';
-// import { Footer } from './Components/Footer';
-
+import { Garage } from "./Components/Garage/Garage";
+import { Header } from "./Components/Header/Header";
+import { Winners } from "./Components/Winners/Winners";
 import { Services } from "./Interfaces/Types";
 import { RaceService } from "./Services/RaceService";
 
@@ -25,13 +22,10 @@ export class App implements IApp {
   }
 
   render(): void {
-    const settings = this.services.Race.getSettings();
-    const html = `<h1>${settings.cars[0].brand}</h1>`;
-    this.root.innerHTML = html;
-    // new Header(this.root, this.services).render();
+    new Header(this.root, this.services).render();
     
-    // new Main(this.root, this.services).render();
+    new Winners(this.root, this.services).render();
 
-    // new Footer(this.root, this.services).render();
+    new Garage(this.root, this.services).render();
   }
 }

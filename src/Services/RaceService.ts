@@ -25,7 +25,11 @@ export class RaceService extends Observer {
     });
   }
 
-  getSettings(): Settings {
-    return this.settings;
+  toggleSection(nameSection: string) {
+    if (nameSection === 'garage') {
+      this.dispath('garage');
+    } else {
+      this.dispath('winners');
+    }
   }
 }
