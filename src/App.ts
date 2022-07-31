@@ -4,24 +4,30 @@
 // import { StoreService } from './Service/StoreService';
 // import { Footer } from './Components/Footer';
 
+import { Services } from "./Interfaces/Types";
+import { RaceService } from "./Services/RaceService";
+
 interface IApp {
   render: () => void;
 }
 
 export class App implements IApp {
-  // private readonly services: Services;
+  private readonly services: Services;
 
-  // constructor(private readonly root: HTMLElement, settings: string) {
-  //   this.services = {
-  //     store: new StoreService(settings)
-  //   };
-  // }
+  constructor(private readonly root: HTMLElement, settings: string) {
+    this.services = {
+      Race: new RaceService(settings)
+    };
+  }
 
-  // static getInitOption(): Promise<string> {
-  //   return StoreService.getInitOption();
-  // }
+  static getInitSettings(): Promise<string> {
+    return RaceService.getInitSettings();
+  }
 
   render(): void {
+    const settings = this.services.Race.getSettings();
+    const html = `<h1>${settings.cars[0].brand}</h1>`;
+    this.root.innerHTML = html;
     // new Header(this.root, this.services).render();
     
     // new Main(this.root, this.services).render();

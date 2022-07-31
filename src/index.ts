@@ -1,9 +1,7 @@
 import { App } from './App';
 import './style.scss';
 
-// App.getInitOption()
-//   .then(settings => {
-//     new App(document.body, settings).render();
-//   });
-
-new App().render();
+App.getInitSettings()
+  .then(initSettings => {
+    new App(document.body, initSettings).render();
+  });
