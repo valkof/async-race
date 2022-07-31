@@ -5,3 +5,9 @@ section {
 .deactive {
   display: none;
 }
+
+.section__header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}

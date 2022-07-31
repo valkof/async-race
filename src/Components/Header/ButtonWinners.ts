@@ -9,10 +9,10 @@ export class ButtonWinners extends ElementButton {
   render() {
     this.element.addEventListener('click', () => {
       this.element.disabled = true;
-      this.services.Race.toggleSection('winners');
+      this.services.Race.toggleSection('openWinners');
     })
     
-    this.services.Race.addListener('garage', () => {
+    this.services.Race.addListener('openGarage', () => {
       this.element.disabled = false;
     })
 
