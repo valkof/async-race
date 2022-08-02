@@ -36,3 +36,10 @@ export async function updateCar(body: Car): Promise<Car> {
   const car = await response.json() as Car;
   return car;
 }
+
+export async function deleteCar(id: number): Promise<Car> {
+  const response = await fetch(`${garage}/${id}`, {
+    method: 'DELETE'
+  });
+  return await response.json() as Car;
+}

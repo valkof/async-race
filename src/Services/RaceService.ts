@@ -1,6 +1,6 @@
 import { Observer } from "../Abstract/Observer";
 import { Car, CarQuery, CarResponse, Settings, Winner, WinnerResponse } from "../Interfaces/Types";
-import { createCar, getCars, updateCar } from "./GarageService";
+import { createCar, deleteCar, getCars, updateCar } from "./GarageService";
 import { getInitSettingsFromJSON } from "./getSetting";
 import { getWinners } from "./WinnersService";
 
@@ -100,6 +100,13 @@ export class RaceService extends Observer {
       .then(() => {
         this.updateGarage(this.pageGarage.page);
       });
+  }
+
+  deleteOldCar(id: number): void {
+    deleteCar(id)
+      .then(() => {
+        this.updateGarage(this.pageGarage.page);
+      })
   }
 
   setSettingsCar(typeCar: 'new' | 'old', obj: Record<string, string | number>): void {
