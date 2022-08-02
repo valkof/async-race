@@ -45,3 +45,8 @@
     min-height: 20px;
     margin: 15px 0;
   }
+
+  .disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}

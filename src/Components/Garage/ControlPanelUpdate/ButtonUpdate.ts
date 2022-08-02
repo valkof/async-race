@@ -2,16 +2,17 @@ import { IBaseInterface } from "../../../Interfaces/Interfaces";
 import { Services } from "../../../Interfaces/Types";
 import { ElementButton } from "../../Elements/ElementButton";
 
-export class ButtonCreate extends ElementButton implements IBaseInterface {
+export class ButtonUpdate extends ElementButton implements IBaseInterface {
   constructor(private readonly parent: HTMLElement, private readonly services: Services) {
-    super('Create', ['panel_create__button']);
+    super('Update', ['panel_update__button']);
   }
 
   render(): void {
     this.parent.appendChild(this.element);
     
     this.element.addEventListener('click', () => {
-      this.services.Race.createNewCar();
+      this.services.Race.tooglePanelUpdate('closePanelUpdate');
+      this.services.Race.updateOldCar();
     })
   }
 }

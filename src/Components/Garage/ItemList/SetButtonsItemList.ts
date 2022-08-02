@@ -1,7 +1,7 @@
 import { BaseComponent } from "../../../Abstract/BaseComponent";
 import { IBaseInterface } from "../../../Interfaces/Interfaces";
 import { Car, Services } from "../../../Interfaces/Types";
-import { ButtonRename } from "./ButtonRename";
+import { ButtonRemove } from "./ButtonRemove";
 import { ButtonSelect } from "./ButtonSelect";
 import { ButtonStart } from "./ButtonStart";
 import { ButtonStop } from "./ButtonStop";
@@ -13,7 +13,7 @@ export class SetButtonsItemList extends BaseComponent implements IBaseInterface 
 
   render(): void {
     new ButtonSelect(this.element, this.services, this.car).render();
-    new ButtonRename(this.element, this.services, this.car).render();
+    new ButtonRemove(this.element, this.services, this.car).render();
     new ButtonStart(this.element, this.services, this.car).render();
     new ButtonStop(this.element, this.services, this.car).render();
 

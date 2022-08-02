@@ -10,8 +10,8 @@ export class GarageItemList extends BaseComponent implements IBaseInterface {
   }
 
   render(): void {
-    new SetButtonsItemList(this.element, this.services, this.car).render();
     new RoadCar(this.element, this.services, this.car).render();
+    new SetButtonsItemList(this.element, this.services, this.car).render();
 
     this.parent.appendChild(this.element);
     

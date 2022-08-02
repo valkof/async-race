@@ -1,5 +1,6 @@
 .section__control_panel{
   display: flex;
+  gap: 10px;
   flex-direction: column;
   padding: 10px;
 
@@ -10,7 +11,8 @@
   }
 }
 
-.panel_create {
+.panel_create,
+.panel_update {
   display: flex;
   align-items: center;
   gap: 10px;

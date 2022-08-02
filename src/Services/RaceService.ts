@@ -1,6 +1,6 @@
 import { Observer } from "../Abstract/Observer";
 import { Car, CarQuery, CarResponse, Settings, Winner, WinnerResponse } from "../Interfaces/Types";
-import { createCar, getCars } from "./GarageService";
+import { createCar, getCars, updateCar } from "./GarageService";
 import { getInitSettingsFromJSON } from "./getSetting";
 import { getWinners } from "./WinnersService";
 
@@ -11,8 +11,10 @@ export class RaceService extends Observer {
   private pageGarage = {} as CarResponse;
 
   private pageWinners = {} as WinnerResponse;
-
+  
   private newCar = {name: '', color: ''} as CarQuery;
+  
+  private oldCar = {name: '', color: '', id: 0} as Car;
   
   constructor(settings: string) {
     super();
@@ -92,9 +94,29 @@ export class RaceService extends Observer {
       });
   }
 
-  putSettingsCar(typeCar: 'new' | 'old', parameter: 'name' | 'color', value: string): void {
+  updateOldCar(): void {
+    this.dispath('updateCar');
+    updateCar(this.oldCar)
+      .then(() => {
+        this.updateGarage(this.pageGarage.page);
+      });
+  }
+
+  setSettingsCar(typeCar: 'new' | 'old', obj: Record<string, string | number>): void {
     if (typeCar === 'new') {
-      this.newCar[parameter as keyof CarQuery] = value;
+      Object.assign(this.newCar, obj);
+    } else {
+      Object.assign(this.oldCar, obj);
     }
+  }
+
+  getSettingCar(typeCar: 'new' | 'old', key: 'name' | 'color'): string {
+    if (typeCar === 'new') return  this.newCar[key as keyof CarQuery];
+    return this.oldCar[key as keyof Car] as string;
+  }
+
+  tooglePanelUpdate(action: 'openPanelUpdate' | 'closePanelUpdate'): void {
+    if (action === 'openPanelUpdate') this.dispath('getSettingsOldCar');
+    this.dispath(action);
   }
 }

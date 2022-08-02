@@ -8,8 +8,11 @@ export class ButtonSelect extends ElementButton implements IBaseInterface {
   }
 
   render(): void {
-    
-
     this.parent.appendChild(this.element);
+
+    this.element.addEventListener('click', () => {
+      this.services.Race.setSettingsCar('old', this.car);
+      this.services.Race.tooglePanelUpdate('openPanelUpdate');
+    })
   }
 }

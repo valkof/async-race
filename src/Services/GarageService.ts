@@ -23,3 +23,16 @@ export async function createCar(body: CarQuery): Promise<Car> {
   const car = await response.json() as Car;
   return car;
 }
+
+export async function updateCar(body: Car): Promise<Car> {
+  const response = await fetch(`${garage}/${body.id}`, {
+    method: 'PUT',
+    body: JSON.stringify({
+      name: body.name,
+      color: body.color
+    }),
+    headers: {'Content-Type': 'application/json'}
+  });
+  const car = await response.json() as Car;
+  return car;
+}
