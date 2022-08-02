@@ -119,4 +119,29 @@ export class RaceService extends Observer {
     if (action === 'openPanelUpdate') this.dispath('getSettingsOldCar');
     this.dispath(action);
   }
+
+  private Randomize(number: number): number {
+    return Math.floor(Math.random() * number);
+  }
+
+  generationCars(count: number): void {
+    if (count === 0) {
+      this.updateGarage(this.pageGarage.page);
+      return;
+    }
+    const numberBrand = this.Randomize(10);
+    const numberModel = this.Randomize(10);
+    const brand = this.settings.cars[numberBrand].brand;
+    const model = this.settings.cars[numberBrand].models[numberModel];
+    const colorRed = this.Randomize(255).toString(16).padStart(2, '0');
+    const colorGreen = this.Randomize(255).toString(16).padStart(2, '0');
+    const colorBlue = this.Randomize(255).toString(16).padStart(2, '0');
+    createCar({
+      name: `${brand} - ${model}`,
+      color: `#${colorRed}${colorGreen}${colorBlue}`
+    })
+      .then(() => {
+        this.generationCars(count - 1);
+      });
+  }
 }

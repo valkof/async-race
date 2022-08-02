@@ -2,6 +2,7 @@ import { BaseComponent } from "../../Abstract/BaseComponent";
 import { IBaseInterface } from "../../Interfaces/Interfaces";
 import { Services } from "../../Interfaces/Types";
 import { ControlPanelCreate } from "./ControlPanelCreate/ControlPanelCreate";
+import { ControlPanelGame } from "./ControlPanelGame/ControlPanelGame";
 import { ControlPanelUpdate } from "./ControlPanelUpdate/ControlPanelUpdate";
 
 export class GarageControlPanel extends BaseComponent implements IBaseInterface {
@@ -12,6 +13,7 @@ export class GarageControlPanel extends BaseComponent implements IBaseInterface 
   render(): void {
     new ControlPanelCreate(this.element, this.services).render();
     new ControlPanelUpdate(this.element, this.services).render();
+    new ControlPanelGame(this.element, this.services).render();
 
     this.parent.appendChild(this.element);
   }
