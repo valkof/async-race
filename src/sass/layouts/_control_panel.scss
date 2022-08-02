@@ -1,0 +1,17 @@
+.section__control_panel{
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+
+  .button {
+    height: 20px;
+    padding-top: 1px;
+    font-size: 13px;
+  }
+}
+
+.panel_create {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}

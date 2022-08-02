@@ -17,6 +17,11 @@ export type Car = {
   id: number
 }
 
+export type CarQuery = {
+  name: string,
+  color: string
+}
+
 export type CarResponse = {
   page: number,
   count: string | null,

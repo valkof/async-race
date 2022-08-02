@@ -1,0 +1,24 @@
+.item__set_buttons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 10px;
+
+  .button {
+    font-size: 10px;
+    padding: 1px 5px;
+    width: 50px;
+  }
+}
+
+.item__road {
+  height: 60px;
+  border-bottom: 1px dashed white;
+  position: relative;
+}
+
+.car_svg {
+  background-color: brown;
+  position: absolute;
+  bottom: 0px;
+}

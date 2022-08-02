@@ -1,6 +1,6 @@
 import { Observer } from "../Abstract/Observer";
-import { CarResponse, Settings, WinnerResponse } from "../Interfaces/Types";
-import { getCars } from "./GarageService";
+import { Car, CarQuery, CarResponse, Settings, Winner, WinnerResponse } from "../Interfaces/Types";
+import { createCar, getCars } from "./GarageService";
 import { getInitSettingsFromJSON } from "./getSetting";
 import { getWinners } from "./WinnersService";
 
@@ -11,6 +11,8 @@ export class RaceService extends Observer {
   private pageGarage = {} as CarResponse;
 
   private pageWinners = {} as WinnerResponse;
+
+  private newCar = {name: '', color: ''} as CarQuery;
   
   constructor(settings: string) {
     super();
@@ -62,7 +64,7 @@ export class RaceService extends Observer {
       });
   }
 
-  getCountRecords(section: string): string {
+  getCountRecords(section: 'garage' | 'winners'): string {
     if (section === 'garage') {
       return this.pageGarage.count ? this.pageGarage.count : '0';
     }
@@ -70,5 +72,29 @@ export class RaceService extends Observer {
       return this.pageWinners.count ? this.pageWinners.count : '0';
     }
     return '';
+  }
+
+  getRecords(section: 'garage' | 'winners'): Car[] | Winner[] {
+    if (section === 'garage') {
+      return this.pageGarage.cars;
+    }
+    if (section === 'winners') {
+      return this.pageWinners.cars;
+    }
+    return [];
+  }
+
+  createNewCar(): void {
+    this.dispath('createCar');
+    createCar(this.newCar)
+      .then(() => {
+        this.updateGarage(this.pageGarage.page);
+      });
+  }
+
+  putSettingsCar(typeCar: 'new' | 'old', parameter: 'name' | 'color', value: string): void {
+    if (typeCar === 'new') {
+      this.newCar[parameter as keyof CarQuery] = value;
+    }
   }
 }
