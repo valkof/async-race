@@ -90,6 +90,10 @@ export class RaceService extends Observer {
   deleteOldCar(id: number): void {
     deleteCar(id)
       .then(() => {
+        if (this.status.countCarsGarage == ((this.status.paginationGarage - 1) * 7) + 1
+        && this.status.paginationGarage > 1) {
+          this.status.paginationGarage -= 1;
+        }
         this.updateGarage();
       })
   }
@@ -117,5 +121,19 @@ export class RaceService extends Observer {
       .then(() => {
         this.generationCars(count - 1);
       });
+  }
+
+  nextPaginationGarage(): void {
+    if (this.status.countCarsGarage > this.status.paginationGarage * 7) {
+      this.status.paginationGarage += 1;
+      this.updateGarage();
+    }
+  }
+
+  lastPaginationGarage(): void {
+    if (this.status.paginationGarage > 1) {
+      this.status.paginationGarage -= 1;
+      this.updateGarage();
+    }
   }
 }

@@ -1,6 +1,6 @@
 import { BaseComponent } from "../../../Abstract/BaseComponent";
 import { IBaseInterface } from "../../../Interfaces/Interfaces";
-import { Services } from "../../../Interfaces/Types";
+import { Services, Status } from "../../../Interfaces/Types";
 
 export class SpanPageGarage extends BaseComponent implements IBaseInterface {
   constructor(private readonly parent: HTMLElement, private readonly services: Services) {
@@ -10,8 +10,8 @@ export class SpanPageGarage extends BaseComponent implements IBaseInterface {
   render(): void {
     this.parent.appendChild(this.element);
     
-    // this.element.addEventListener('click', () => {
-    //   this.services.Race.createNewCar();
-    // })
+    this.services.Race.addListener('updateGarage', (status: Status) => {
+      this.element.innerText = `Page #${status.paginationGarage}`;
+    })
   }
 }
