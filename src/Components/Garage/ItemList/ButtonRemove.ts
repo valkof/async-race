@@ -11,8 +11,7 @@ export class ButtonRemove extends ElementButton implements IBaseInterface {
     this.parent.appendChild(this.element);
 
     this.element.addEventListener('click', () => {
-      (this.element as HTMLButtonElement).disabled = true;
-      // this.element.classList.add('disabled');
+      this.element.disabled = true;
       this.services.Race.deleteOldCar(this.car.id);
     })
   }

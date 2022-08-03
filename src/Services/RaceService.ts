@@ -37,12 +37,8 @@ export class RaceService extends Observer {
     });
   }
 
-  toggleSection(nameSection: string) {
-    if (nameSection === 'openGarage') {
-      this.dispath('openGarage');
-    } else {
-      this.dispath('openWinners');
-    }
+  openPage(namePage: string): void {
+    this.dispath('openPage', namePage);
   }
 
   updatePages(pageGarage = 1, pageWinners = 1, sort = 'time', order = 'ASC'): void {

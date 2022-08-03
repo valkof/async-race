@@ -14,15 +14,15 @@ export class Garage extends BaseComponent implements IBaseInterface {
     new GarageControlPanel(this.element, this.services).render();
     new GarageHeader(this.element, this.services).render();
     new GarageList(this.element, this.services).render();
-
-    this.services.Race.addListener('openGarage', () => {
-      this.element.classList.remove('deactive');
-    })
-
-    this.services.Race.addListener('openWinners', () => {
-      this.element.classList.add('deactive');
-    })
-
+    
     this.parent.appendChild(this.element);
+
+    this.services.Race.addListener('openPage', (namePage: string) => {
+      if (namePage === 'garage') {
+        this.element.classList.remove('deactive');
+      } else {
+        this.element.classList.add('deactive');
+      }
+    })
   }
 }

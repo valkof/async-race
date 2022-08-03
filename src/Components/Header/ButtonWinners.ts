@@ -7,15 +7,15 @@ export class ButtonWinners extends ElementButton {
   }
 
   render() {
+    this.parent.appendChild(this.element);
+
     this.element.addEventListener('click', () => {
       this.element.disabled = true;
-      this.services.Race.toggleSection('openWinners');
+      this.services.Race.openPage('winners');
     })
     
-    this.services.Race.addListener('openGarage', () => {
-      this.element.disabled = false;
+    this.services.Race.addListener('openPage', (namePage: string) => {
+      this.element.disabled = (namePage === 'winners');
     })
-
-    this.parent.appendChild(this.element);
   }
 }

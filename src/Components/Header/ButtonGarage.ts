@@ -7,16 +7,16 @@ export class ButtonGarage extends ElementButton {
   }
 
   render(): void {
-    this.element.addEventListener('click', () => {
-      this.element.disabled = true;
-      this.services.Race.toggleSection('openGarage');
-    })
-    
-    this.services.Race.addListener('openWinners', () => {
-      this.element.disabled = false;
-    })
-
     this.element.disabled = true;
     this.parent.appendChild(this.element);
+
+    this.element.addEventListener('click', () => {
+      this.element.disabled = true;
+      this.services.Race.openPage('garage');
+    })
+    
+    this.services.Race.addListener('openPage', (namePage: string) => {
+      this.element.disabled = (namePage === 'garage');
+    })
   }
 }

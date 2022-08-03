@@ -10,16 +10,16 @@ export class Winners extends BaseComponent implements IBaseInterface {
 
   render(): void {
     new WinnersHeader(this.element, this.services).render();
-
-    this.services.Race.addListener('openWinners', () => {
-      this.element.classList.remove('deactive');
-    })
-
-    this.services.Race.addListener('openGarage', () => {
-      this.element.classList.add('deactive');
-    })
-
+    
     this.element.classList.add('deactive');
     this.parent.appendChild(this.element);
+
+    this.services.Race.addListener('openPage', (namePage: string) => {
+      if (namePage === 'winners') {
+        this.element.classList.remove('deactive');
+      } else {
+        this.element.classList.add('deactive');
+      }
+    })
   }
 }
