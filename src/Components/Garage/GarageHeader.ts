@@ -1,6 +1,6 @@
 import { BaseComponent } from "../../Abstract/BaseComponent";
 import { IBaseInterface } from "../../Interfaces/Interfaces";
-import { Services } from "../../Interfaces/Types";
+import { Services, Status } from "../../Interfaces/Types";
 
 export class GarageHeader extends BaseComponent implements IBaseInterface {
   constructor(private readonly parent: HTMLElement, private readonly services: Services) {
@@ -18,9 +18,8 @@ export class GarageHeader extends BaseComponent implements IBaseInterface {
 
     this.parent.appendChild(this.element);
     
-    this.services.Race.addListener('updateGarage', () => {
-      const count = this.services.Race.getCountRecords('garage');
-      span.element.innerText = `(${count})`;
+    this.services.Race.addListener('updateGarage', (status: Status) => {
+      span.element.innerText = `(${status.countCarsGarage})`;
     })
   }
 }

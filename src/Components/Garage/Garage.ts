@@ -1,6 +1,6 @@
 import { BaseComponent } from "../../Abstract/BaseComponent";
 import { IBaseInterface } from "../../Interfaces/Interfaces";
-import { Services } from "../../Interfaces/Types";
+import { Services, Status } from "../../Interfaces/Types";
 import { GarageControlPanel } from "./GarageControlPanel";
 import { GarageHeader } from "./GarageHeader";
 import { GarageList } from "./GarageList";
@@ -19,8 +19,8 @@ export class Garage extends BaseComponent implements IBaseInterface {
     
     this.parent.appendChild(this.element);
 
-    this.services.Race.addListener('openPage', (namePage: string) => {
-      if (namePage === 'garage') {
+    this.services.Race.addListener('openPage', (status: Status) => {
+      if (status.currentPage === 'garage') {
         this.element.classList.remove('deactive');
       } else {
         this.element.classList.add('deactive');

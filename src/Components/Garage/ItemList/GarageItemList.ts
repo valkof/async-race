@@ -14,10 +14,5 @@ export class GarageItemList extends BaseComponent implements IBaseInterface {
     new SetButtonsItemList(this.element, this.services, this.car).render();
 
     this.parent.appendChild(this.element);
-    
-    // this.services.Race.addListener('updateGarage', () => {
-    //   const count = this.services.Race.getCountRecords('garage');
-    //   span.element.innerText = `(${count})`;
-    // })
   }
 }

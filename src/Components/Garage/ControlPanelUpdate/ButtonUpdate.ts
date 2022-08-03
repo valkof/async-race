@@ -11,7 +11,6 @@ export class ButtonUpdate extends ElementButton implements IBaseInterface {
     this.parent.appendChild(this.element);
     
     this.element.addEventListener('click', () => {
-      this.services.Race.tooglePanelUpdate('closePanelUpdate');
       this.services.Race.updateOldCar();
     })
   }

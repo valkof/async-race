@@ -1,6 +1,6 @@
 import { BaseComponent } from "../../../Abstract/BaseComponent";
 import { IBaseInterface } from "../../../Interfaces/Interfaces";
-import { Services } from "../../../Interfaces/Types";
+import { Services, Status } from "../../../Interfaces/Types";
 import { ButtonUpdate } from "./ButtonUpdate";
 import { ColorUpdate } from "./ColorUpdate";
 import { InputUpdate } from "./InputUpdate";
@@ -17,11 +17,11 @@ export class ControlPanelUpdate extends BaseComponent implements IBaseInterface 
 
     this.parent.appendChild(this.element);
 
-    this.services.Race.addListener('openPanelUpdate', () => {
+    this.services.Race.addListener('updatePanel', () => {
       this.element.classList.remove('disabled');
     })
 
-    this.services.Race.addListener('closePanelUpdate', () => {
+    this.services.Race.addListener('updateGarage', () => {
       this.element.classList.add('disabled');
     })
   }

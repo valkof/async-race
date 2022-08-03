@@ -18,7 +18,7 @@ export class App implements IApp {
   }
 
   static getInitSettings(): Promise<string> {
-    return RaceService.getInitSettings();
+    return RaceService.getNameOfCars();
   }
 
   render(): void {

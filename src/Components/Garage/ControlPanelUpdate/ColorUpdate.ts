@@ -1,6 +1,6 @@
 import { BaseComponent } from "../../../Abstract/BaseComponent";
 import { IBaseInterface } from "../../../Interfaces/Interfaces";
-import { Services } from "../../../Interfaces/Types";
+import { Services, Status } from "../../../Interfaces/Types";
 
 export class ColorUpdate extends BaseComponent implements IBaseInterface {
   constructor(private readonly parent: HTMLElement, private readonly services: Services) {
@@ -8,20 +8,21 @@ export class ColorUpdate extends BaseComponent implements IBaseInterface {
   }
 
   render(): void {
-    (this.element as HTMLInputElement).type = 'color';
-    (this.element as HTMLInputElement).value = '#2548D4';
+    const inputElement = this.element as HTMLInputElement;
+    inputElement.type = 'color';
 
     this.parent.appendChild(this.element);
-    
-    this.services.Race.addListener('updateCar', () => {
-      this.services.Race.setSettingsCar('old', {
-        'color': (this.element as HTMLInputElement).value
-      });
+
+    this.services.Race.addListener('updatePanel', (status: Status) => {
+      inputElement.value = status.oldCar.color;
     })
 
-    this.services.Race.addListener('getSettingsOldCar', () => {
-      const color = this.services.Race.getSettingCar('old', 'color');
-      (this.element as HTMLInputElement).value = color;
+    this.services.Race.addListener('updateGarage', (status: Status) => {
+      inputElement.value = status.oldCar.color;
+    })
+
+    this.services.Race.addListener('updateCar', (status: Status) => {
+      status.oldCar.color = inputElement.value;
     })
   }
 }

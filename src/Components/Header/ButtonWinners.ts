@@ -1,4 +1,4 @@
-import { Services } from "../../Interfaces/Types";
+import { Services, Status } from "../../Interfaces/Types";
 import { ElementButton } from "../Elements/ElementButton";
 
 export class ButtonWinners extends ElementButton {
@@ -10,12 +10,11 @@ export class ButtonWinners extends ElementButton {
     this.parent.appendChild(this.element);
 
     this.element.addEventListener('click', () => {
-      this.element.disabled = true;
       this.services.Race.openPage('winners');
     })
     
-    this.services.Race.addListener('openPage', (namePage: string) => {
-      this.element.disabled = (namePage === 'winners');
+    this.services.Race.addListener('openPage', (status: Status) => {
+      this.element.disabled = (status.currentPage === 'winners');
     })
   }
 }

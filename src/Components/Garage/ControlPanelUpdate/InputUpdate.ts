@@ -1,6 +1,6 @@
 import { BaseComponent } from "../../../Abstract/BaseComponent";
 import { IBaseInterface } from "../../../Interfaces/Interfaces";
-import { Services } from "../../../Interfaces/Types";
+import { Services, Status } from "../../../Interfaces/Types";
 
 export class InputUpdate extends BaseComponent implements IBaseInterface {
   constructor(private readonly parent: HTMLElement, private readonly services: Services) {
@@ -8,20 +8,21 @@ export class InputUpdate extends BaseComponent implements IBaseInterface {
   }
 
   render(): void {
-    (this.element as HTMLInputElement).type = 'text';
+    const inputElement = this.element as HTMLInputElement;
+    inputElement.type = 'text';
 
     this.parent.appendChild(this.element);
-    
-    this.services.Race.addListener('updateCar', () => {
-      this.services.Race.setSettingsCar('old', {
-        'name': (this.element as HTMLInputElement).value
-      });
-      (this.element as HTMLInputElement).value = '';
+
+    this.services.Race.addListener('updatePanel', (status: Status) => {
+      inputElement.value = status.oldCar.name;
     })
 
-    this.services.Race.addListener('getSettingsOldCar', () => {
-      const text = this.services.Race.getSettingCar('old', 'name');
-      (this.element as HTMLInputElement).value = text;
+    this.services.Race.addListener('updateGarage', (status: Status) => {
+      inputElement.value = status.oldCar.name;
+    })
+
+    this.services.Race.addListener('updateCar', (status: Status) => {
+      status.oldCar.name = inputElement.value;
     })
   }
 }

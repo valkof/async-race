@@ -1,6 +1,6 @@
 import { BaseComponent } from "../../Abstract/BaseComponent";
 import { IBaseInterface } from "../../Interfaces/Interfaces";
-import { Car, Services } from "../../Interfaces/Types";
+import { Services, Status } from "../../Interfaces/Types";
 import { GarageItemList } from "./ItemList/GarageItemList";
 
 export class GarageList extends BaseComponent implements IBaseInterface {
@@ -11,11 +11,10 @@ export class GarageList extends BaseComponent implements IBaseInterface {
   render(): void {
     this.parent.appendChild(this.element);
     
-    this.services.Race.addListener('updateGarage', () => {
-      this.element.innerHTML = ''
+    this.services.Race.addListener('updateGarage', (status: Status) => {
+      this.element.innerHTML = '';
       
-      const cars = this.services.Race.getRecords('garage') as Car[];
-      cars.forEach(car => {
+      status.carsGarage.forEach(car => {
         new GarageItemList(this.element, this.services, car).render();
       })
     })

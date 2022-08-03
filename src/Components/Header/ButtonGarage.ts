@@ -1,4 +1,4 @@
-import { Services } from "../../Interfaces/Types";
+import { Services, Status } from "../../Interfaces/Types";
 import { ElementButton } from "../Elements/ElementButton";
 
 export class ButtonGarage extends ElementButton {
@@ -7,16 +7,14 @@ export class ButtonGarage extends ElementButton {
   }
 
   render(): void {
-    this.element.disabled = true;
     this.parent.appendChild(this.element);
 
     this.element.addEventListener('click', () => {
-      this.element.disabled = true;
       this.services.Race.openPage('garage');
     })
     
-    this.services.Race.addListener('openPage', (namePage: string) => {
-      this.element.disabled = (namePage === 'garage');
+    this.services.Race.addListener('openPage', (status: Status) => {
+      this.element.disabled = (status.currentPage === 'garage');
     })
   }
 }

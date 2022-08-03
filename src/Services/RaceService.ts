@@ -1,35 +1,34 @@
 import { Observer } from "../Abstract/Observer";
-import { Car, CarQuery, CarResponse, Settings, Winner, WinnerResponse } from "../Interfaces/Types";
+import { Car, NamesOfCars, Status } from "../Interfaces/Types";
 import { createCar, deleteCar, getCars, updateCar } from "./GarageService";
-import { getInitSettingsFromJSON } from "./getSetting";
+import { getInitSettingsFromJSON, getNamesOfCarsFromJSON } from "./getSettings";
 import { getWinners } from "./WinnersService";
 
 export class RaceService extends Observer {
   
-  private settings = {} as Settings;
+  private namesOfCars = {} as NamesOfCars;
 
-  private pageGarage = {} as CarResponse;
-
-  private pageWinners = {} as WinnerResponse;
+  private status = {} as Status;
   
-  private newCar = {name: '', color: ''} as CarQuery;
-  
-  private oldCar = {name: '', color: '', id: 0} as Car;
-  
-  constructor(settings: string) {
+  constructor(namesOfCars: string) {
     super();
 
-    Object.assign(this.settings, JSON.parse(settings));
+    Object.assign(this.namesOfCars, JSON.parse(namesOfCars));
 
-    this.updatePages();
+    getInitSettingsFromJSON()
+      .then(status => {
+        Object.assign(this.status, status);
+        this.dispath('openPage', this.status);
+        this.updatePages();
+      })
   }
 
-  static getInitSettings(): Promise<string> {
+  static getNameOfCars(): Promise<string> {
     return new Promise((resolve, reject) => {
-      getInitSettingsFromJSON()
-        .then(initSetting => {
-          const strInitSetting = JSON.stringify(initSetting);
-          resolve(strInitSetting);
+      getNamesOfCarsFromJSON()
+        .then(namesOfCars => {
+          const settings = JSON.stringify(namesOfCars);
+          resolve(settings);
         })
         .catch(error => {
           reject(error);
@@ -38,89 +37,61 @@ export class RaceService extends Observer {
   }
 
   openPage(namePage: string): void {
-    this.dispath('openPage', namePage);
+    this.status.currentPage = namePage;
+    this.dispath('openPage', this.status);
   }
 
-  updatePages(pageGarage = 1, pageWinners = 1, sort = 'time', order = 'ASC'): void {
-    this.updateGarage(pageGarage);
-    this.updateWinners(pageWinners, sort, order);
+  private updatePages(): void {
+    this.updateGarage();
+    this.updateWinners();
   }
 
-  updateGarage(page = 1): void {
-    getCars(page)
-      .then(results => {
-        Object.assign(this.pageGarage, results);
-        this.dispath('updateGarage');
+  private updateGarage(): void {
+    getCars(this.status.paginationGarage)
+      .then(response => {
+        Object.assign(this.status, response);
+        this.dispath('updateGarage', this.status);
       });
   }
 
-  updateWinners(page = 1, sort = 'time', order = 'ASC'): void {
-    getWinners(page, sort, order)
-      .then(results => {
-        Object.assign(this.pageWinners, results);
-        this.dispath('updateWinners');
+  private updateWinners(): void {
+    getWinners(this.status.paginationWinners, this.status.fieldSort, this.status.orderSort)
+      .then(response => {
+        Object.assign(this.status, response);
+        this.dispath('updateWinners', this.status);
       });
-  }
-
-  getCountRecords(section: 'garage' | 'winners'): string {
-    if (section === 'garage') {
-      return this.pageGarage.count ? this.pageGarage.count : '0';
-    }
-    if (section === 'winners') {
-      return this.pageWinners.count ? this.pageWinners.count : '0';
-    }
-    return '';
-  }
-
-  getRecords(section: 'garage' | 'winners'): Car[] | Winner[] {
-    if (section === 'garage') {
-      return this.pageGarage.cars;
-    }
-    if (section === 'winners') {
-      return this.pageWinners.cars;
-    }
-    return [];
   }
 
   createNewCar(): void {
-    this.dispath('createCar');
-    createCar(this.newCar)
+    this.dispath('createCar', this.status);
+    createCar(this.status.newCar)
       .then(() => {
-        this.updateGarage(this.pageGarage.page);
+        this.status.newCar.name = '';
+        this.updateGarage();
       });
   }
 
+  selectOldCar(car: Car): void {
+    this.status.idOldCar = car.id;
+    this.status.oldCar.name = car.name;
+    this.status.oldCar.color = car.color;
+    this.dispath('updatePanel', this.status);
+  }
+
   updateOldCar(): void {
-    this.dispath('updateCar');
-    updateCar(this.oldCar)
+    this.dispath('updateCar', this.status);
+    updateCar(this.status.idOldCar, this.status.oldCar)
       .then(() => {
-        this.updateGarage(this.pageGarage.page);
+        this.status.oldCar.name = '';
+        this.updateGarage();
       });
   }
 
   deleteOldCar(id: number): void {
     deleteCar(id)
       .then(() => {
-        this.updateGarage(this.pageGarage.page);
+        this.updateGarage();
       })
-  }
-
-  setSettingsCar(typeCar: 'new' | 'old', obj: Record<string, string | number>): void {
-    if (typeCar === 'new') {
-      Object.assign(this.newCar, obj);
-    } else {
-      Object.assign(this.oldCar, obj);
-    }
-  }
-
-  getSettingCar(typeCar: 'new' | 'old', key: 'name' | 'color'): string {
-    if (typeCar === 'new') return  this.newCar[key as keyof CarQuery];
-    return this.oldCar[key as keyof Car] as string;
-  }
-
-  tooglePanelUpdate(action: 'openPanelUpdate' | 'closePanelUpdate'): void {
-    if (action === 'openPanelUpdate') this.dispath('getSettingsOldCar');
-    this.dispath(action);
   }
 
   private Randomize(number: number): number {
@@ -129,18 +100,18 @@ export class RaceService extends Observer {
 
   generationCars(count: number): void {
     if (count === 0) {
-      this.updateGarage(this.pageGarage.page);
+      this.updateGarage();
       return;
     }
     const numberBrand = this.Randomize(10);
     const numberModel = this.Randomize(10);
-    const brand = this.settings.cars[numberBrand].brand;
-    const model = this.settings.cars[numberBrand].models[numberModel];
+    const brand = this.namesOfCars.cars[numberBrand].brand;
+    const model = this.namesOfCars.cars[numberBrand].models[numberModel];
     const colorRed = this.Randomize(255).toString(16).padStart(2, '0');
     const colorGreen = this.Randomize(255).toString(16).padStart(2, '0');
     const colorBlue = this.Randomize(255).toString(16).padStart(2, '0');
     createCar({
-      name: `${brand} - ${model}`,
+      name: `${brand} ${model}`,
       color: `#${colorRed}${colorGreen}${colorBlue}`
     })
       .then(() => {

@@ -1,6 +1,6 @@
 import { RaceService } from "../Services/RaceService";
 
-export type Settings = {
+export type NamesOfCars = {
   cars: {
     brand: string;
     models: string[]
@@ -22,10 +22,9 @@ export type CarQuery = {
   color: string
 }
 
-export type CarResponse = {
-  page: number,
-  count: string | null,
-  cars: Car[],
+export type CarsResponse = {
+  countCarsGarage: string | null,
+  carsGarage: Car[],
 }
 
 export type Winner = {
@@ -35,7 +34,21 @@ export type Winner = {
 }
 
 export type WinnerResponse = {
-  page: number,
-  count: string | null,
-  cars: Winner[]
+  countCarsWinners: string | null,
+  carsWinners: Winner[]
+}
+
+export type Status = {
+  currentPage: string,
+  paginationGarage: number,
+  paginationWinners: number,
+  fieldSort: 'id' | 'wins' | 'time',
+  orderSort: 'ASC' | 'DESC',
+  countCarsGarage: number,
+  countCarsWinners: number,
+  carsGarage: Car[],
+  carsWinners: Winner[],
+  newCar: CarQuery,
+  idOldCar: number,
+  oldCar: CarQuery
 }
