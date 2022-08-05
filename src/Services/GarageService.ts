@@ -1,11 +1,11 @@
-import { Car, CarQuery, CarsResponse } from "../Interfaces/Types";
+import { Car, Cars, DataCar } from "../Interfaces/Types";
 
 const host = 'http://127.0.0.1:3000';
 
 const garage = `${host}/garage`;
 
 
-export async function getCars(page = 1, limit = 7): Promise<CarsResponse> {
+export async function getCars(page = 1, limit = 7): Promise<Cars> {
   const response = await fetch(`${garage}?_page=${page}&_limit=${limit}`);
   return {
     countCarsGarage: response.headers.get('X-Total-Count'),
@@ -13,7 +13,12 @@ export async function getCars(page = 1, limit = 7): Promise<CarsResponse> {
   };
 }
 
-export async function createCar(body: CarQuery): Promise<Car> {
+export async function getCar(idCar: number): Promise<Car> {
+  const response = await fetch(`${garage}/${idCar}`);
+  return await response.json() as Car;
+}
+
+export async function createCar(body: DataCar): Promise<Car> {
   const response = await fetch(garage, {
     method: 'POST',
     body: JSON.stringify(body),
@@ -22,7 +27,7 @@ export async function createCar(body: CarQuery): Promise<Car> {
   return await response.json() as Car;
 }
 
-export async function updateCar(idCar: number, body: CarQuery): Promise<Car> {
+export async function updateCar(idCar: number, body: DataCar): Promise<Car> {
   const response = await fetch(`${garage}/${idCar}`, {
     method: 'PUT',
     body: JSON.stringify(body),

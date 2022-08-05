@@ -11,6 +11,10 @@ export class SpanHeaderNumber extends BaseComponent implements IBaseInterface {
     this.element.innerText = 'Number';
     this.parent.appendChild(this.element);
     
+    this.element.addEventListener('click', () => {
+      this.services.Race.changeSortWinners('id');
+    })
+
     // this.services.Race.addListener('updateWinners', (status: Status) => {
     //   this.element.innerText = `Page #${status.paginationWinners}`;
     // })

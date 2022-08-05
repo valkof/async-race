@@ -10,19 +10,16 @@ export type NamesOfCars = {
 export type Services = {
   Race: RaceService;
 }
-
-export type Car = {
-  name: string,
-  color: string,
-  id: number
-}
-
-export type CarQuery = {
+export type DataCar = {
   name: string,
   color: string
 }
 
-export type CarsResponse = {
+export type Car = DataCar & {
+  id: number
+}
+
+export type Cars = {
   countCarsGarage: string | null,
   carsGarage: Car[],
 }
@@ -36,30 +33,44 @@ export type DriveMode = {
   success: boolean
 }
 
-export type Winner = {
-  id: number,
+export type Wins = {
   wins: number,
   time: number
 }
 
-export type WinnerResponse = {
+export type Winner = Wins & {
+  id: number
+}
+
+export type Winners = {
   countCarsWinners: string | null,
   carsWinners: Winner[]
 }
+
+export type CarWinner = Car & Winner
+
+export type CarsWinners = {
+  countCarsWinners: string | null,
+  carsWinners: CarWinner[]
+}
+
+export type FieldSort = 'id' | 'wins' | 'time'
+
+export type OrderSort = 'ASC' | 'DESC'
 
 export type Status = {
   currentPage: string,
   paginationGarage: number,
   paginationWinners: number,
-  fieldSort: 'id' | 'wins' | 'time',
-  orderSort: 'ASC' | 'DESC',
+  fieldSort: FieldSort,
+  orderSort: OrderSort,
   countCarsGarage: number,
   countCarsWinners: number,
   carsGarage: Car[],
-  carsWinners: Winner[],
-  newCar: CarQuery,
+  carsWinners: CarWinner[],
+  newCar: DataCar,
   idOldCar: number,
-  oldCar: CarQuery
+  oldCar: DataCar
 }
 
 export type Finish = {

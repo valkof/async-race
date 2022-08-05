@@ -1,7 +1,7 @@
 import { Observer } from "../Abstract/Observer";
-import { Car, Finish, NamesOfCars, Status } from "../Interfaces/Types";
+import { Car, FieldSort, Finish, NamesOfCars, OrderSort, Status } from "../Interfaces/Types";
 import { animation, carEngineDriveMode, carStartStopEngine } from "./DriveService";
-import { createCar, deleteCar, getCars, updateCar } from "./GarageService";
+import { createCar, deleteCar, getCar, getCars, updateCar } from "./GarageService";
 import { getInitSettingsFromJSON, getNamesOfCarsFromJSON } from "./getSettings";
 import { getWinners } from "./WinnersService";
 
@@ -62,10 +62,25 @@ export class RaceService extends Observer {
 
   private updateWinners(): void {
     getWinners(this.status.paginationWinners, this.status.fieldSort, this.status.orderSort)
-      .then(response => {
-        Object.assign(this.status, response);
-        this.dispath('updateWinners', this.status);
+      .then(responseWins => {
+        const cars = responseWins.carsWinners.map(win => getCar(win.id));
+        Promise.all(cars)
+          .then(responseCars => {
+            const carsWinner = responseWins.carsWinners.map((win, i) => Object.assign(win, responseCars[i]));
+            responseWins.carsWinners = carsWinner;
+            Object.assign(this.status, responseWins);
+            this.dispath('updateWinners', this.status);
+          })
       });
+  }
+
+  changeSortWinners(fieldSort = 'id' as FieldSort): void {
+    if (this.status.fieldSort === fieldSort) {
+      this.status.orderSort = this.status.orderSort === 'ASC' ? 'DESC' : 'ASC';
+    } else {
+      this.status.fieldSort = fieldSort;
+    }
+    this.updateWinners();
   }
 
   createNewCar(): void {

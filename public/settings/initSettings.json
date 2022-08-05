@@ -2,7 +2,7 @@
   "currentPage": "garage",
   "paginationGarage": 1,
   "paginationWinners": 1,
-  "fieldSort": "time",
+  "fieldSort": "id",
   "orderSort": "ASC",
   "newCar": {
     "name": "",

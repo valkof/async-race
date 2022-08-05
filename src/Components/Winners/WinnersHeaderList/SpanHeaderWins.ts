@@ -11,6 +11,10 @@ export class SpanHeaderWins extends BaseComponent implements IBaseInterface {
     this.element.innerText = 'Wins';
     this.parent.appendChild(this.element);
     
+    this.element.addEventListener('click', () => {
+      this.services.Race.changeSortWinners('wins');
+    })
+
     // this.services.Race.addListener('updateWinners', (status: Status) => {
     //   this.element.innerText = `Page #${status.paginationWinners}`;
     // })

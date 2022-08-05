@@ -1,6 +1,7 @@
 import { BaseComponent } from "../../Abstract/BaseComponent";
 import { IBaseInterface } from "../../Interfaces/Interfaces";
 import { Services, Status } from "../../Interfaces/Types";
+import { WinnersItemList } from "./ItemList/WinnersItemList";
 
 export class WinnersList extends BaseComponent implements IBaseInterface {
   constructor(private readonly parent: HTMLElement, private readonly services: Services) {
@@ -14,7 +15,7 @@ export class WinnersList extends BaseComponent implements IBaseInterface {
       this.element.innerHTML = '';
       
       status.carsWinners.forEach(car => {
-        // new GarageItemList(this.element, this.services, car).render();
+        new WinnersItemList(this.element, this.services, car).render();
       })
     })
   }

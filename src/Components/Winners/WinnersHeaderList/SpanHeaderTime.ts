@@ -10,6 +10,10 @@ export class SpanHeaderTime extends BaseComponent implements IBaseInterface {
   render(): void {
     this.element.innerText = 'Time';
     this.parent.appendChild(this.element);
+
+    this.element.addEventListener('click', () => {
+      this.services.Race.changeSortWinners('time');
+    })
     
     // this.services.Race.addListener('updateWinners', (status: Status) => {
     //   this.element.innerText = `Page #${status.paginationWinners}`;

@@ -1,0 +1,13 @@
+.winner_list__item {
+  display: grid;
+  width: 400px;
+  grid-template-columns: 1fr 1fr 3fr 1fr 1fr;
+
+  span {
+    text-align: center;
+  }
+
+  .span_name {
+    text-align: left;
+  }
+}

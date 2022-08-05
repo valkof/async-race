@@ -3,6 +3,7 @@ import { IBaseInterface } from "../../Interfaces/Interfaces";
 import { Services, Status } from "../../Interfaces/Types";
 import { WinnersHeader } from "./WinnersHeader";
 import { WinnersHeaderList } from "./WinnersHeaderList/WinnersHeaderList";
+import { WinnersList } from "./WinnersList";
 import { WinnersPagination } from "./WinnersPagination/WinnersPagination";
 
 export class Winners extends BaseComponent implements IBaseInterface {
@@ -14,6 +15,7 @@ export class Winners extends BaseComponent implements IBaseInterface {
     new WinnersHeader(this.element, this.services).render();
     new WinnersPagination(this.element, this.services).render();
     new WinnersHeaderList(this.element, this.services).render();
+    new WinnersList(this.element, this.services).render();
     
     this.parent.appendChild(this.element);
 
