@@ -18,3 +18,13 @@ section {
   gap: 20px;
   padding: 10px;
 }
+
+.section__header_list {
+  display: grid;
+  width: 300px;
+  grid-template-columns: repeat(5, 1fr);
+
+  span {
+    text-align: center;
+  }
+}

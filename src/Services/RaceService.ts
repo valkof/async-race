@@ -143,6 +143,20 @@ export class RaceService extends Observer {
     }
   }
 
+  nextPaginationWinners(): void {
+    if (this.status.countCarsWinners > this.status.paginationWinners * 10) {
+      this.status.paginationWinners += 1;
+      this.updateWinners();
+    }
+  }
+
+  lastPaginationWinners(): void {
+    if (this.status.paginationWinners > 1) {
+      this.status.paginationWinners -= 1;
+      this.updateWinners();
+    }
+  }
+
   addImageCar(idCar: number, image: HTMLElement): void {
     this.imageCars.push({
       idCar: idCar,
