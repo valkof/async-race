@@ -10,8 +10,8 @@ export class ButtonRace extends ElementButton implements IBaseInterface {
   render(): void {
     this.parent.appendChild(this.element);
     
-    // this.element.addEventListener('click', () => {
-    //   this.services.Race.createNewCar();
-    // })
+    this.element.addEventListener('click', () => {
+      this.services.Race.carsRace();
+    })
   }
 }

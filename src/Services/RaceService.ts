@@ -1,5 +1,6 @@
 import { Observer } from "../Abstract/Observer";
-import { Car, NamesOfCars, Status } from "../Interfaces/Types";
+import { Car, Finish, NamesOfCars, Status } from "../Interfaces/Types";
+import { animation, carEngineDriveMode, carStartStopEngine } from "./DriveService";
 import { createCar, deleteCar, getCars, updateCar } from "./GarageService";
 import { getInitSettingsFromJSON, getNamesOfCarsFromJSON } from "./getSettings";
 import { getWinners } from "./WinnersService";
@@ -9,6 +10,10 @@ export class RaceService extends Observer {
   private namesOfCars = {} as NamesOfCars;
 
   private status = {} as Status;
+
+  private imageCars = [] as {idCar: number, image: HTMLElement}[];
+
+  private animationCars = [] as {idCar: number, idFrame: number, time: number}[];
   
   constructor(namesOfCars: string) {
     super();
@@ -50,6 +55,7 @@ export class RaceService extends Observer {
     getCars(this.status.paginationGarage)
       .then(response => {
         Object.assign(this.status, response);
+        this.imageCars = [];
         this.dispath('updateGarage', this.status);
       });
   }
@@ -135,5 +141,106 @@ export class RaceService extends Observer {
       this.status.paginationGarage -= 1;
       this.updateGarage();
     }
+  }
+
+  addImageCar(idCar: number, image: HTMLElement): void {
+    this.imageCars.push({
+      idCar: idCar,
+      image: image
+    })
+  }
+
+  startAnimation(car: Car): void {
+    carStartStopEngine(car.id, 'started')
+      .then(engine => {
+        const image = this.imageCars.find(el => el.idCar === car.id);
+        if (image) {
+          this.animationCars.push(animation(image.image, car.id, engine));
+        }
+        this.race(car);
+        
+      })
+  }
+
+  carStopAnimation(car: Car): void {
+    carStartStopEngine(car.id, 'stopped')
+      .then(() => {
+        const indexFrame = this.animationCars.findIndex(el => el.idCar === car.id);
+        let frame;
+        if (indexFrame >= 0) frame = this.animationCars[indexFrame];
+        if (frame) {
+          window.cancelAnimationFrame(frame.idFrame);
+          const imageCar = this.imageCars.find(el => el.idCar === car.id);
+          if (imageCar) imageCar.image.style.left = '0px';
+          this.animationCars.splice(indexFrame, 1);
+        }
+      })
+  }
+
+  carsRace(): void {
+    const startCar = this.status.carsGarage.map(car => carStartStopEngine(car.id, 'started'));
+    Promise.all(startCar).then((engineCars) => {
+      this.status.carsGarage.forEach((car, i) => {
+        const image = this.imageCars.find(el => el.idCar === car.id);
+        if (image) {
+          this.animationCars.push(animation(image.image, car.id, engineCars[i]));
+        }
+      })
+      const driveCars = this.status.carsGarage.map(car => this.race(car));
+      this.raceAll(driveCars)
+        .then(driveCar => {
+          console.log(driveCar);
+        })
+      
+    })
+  }
+
+  private raceAll(driveCars: Promise<Finish>[]): Promise<Finish> {
+    return new Promise((resolve) => {
+      Promise.race(driveCars)
+        .then(driveCar => {
+          
+          if (!driveCar.success) {
+            const indexFrame = this.animationCars.findIndex(el => el.idCar === driveCar.idCar);
+            this.animationCars.splice(indexFrame, 1);
+            driveCars.splice(indexFrame, 1);
+            resolve(this.raceAll(driveCars));
+          }
+
+          resolve(driveCar);
+        })
+
+    })
+  }
+
+  private async race(car: Car): Promise<Finish> {
+    return carEngineDriveMode(car.id)
+      .then(driveMode => {
+        const indexFrame = this.animationCars.findIndex(el => el.idCar === car.id);
+        let frame;
+        if (indexFrame >= 0) frame = this.animationCars[indexFrame];
+        
+        if (frame) {
+          if (!driveMode.success) {
+            // console.log(`loose - ${frame.time}`);
+            window.cancelAnimationFrame(frame.idFrame);
+            const imageCar = this.imageCars.find(image => image.idCar === car.id);
+            if (imageCar) {
+              imageCar.image.style.transform = 'rotate(180deg)';
+            }
+            // this.animationCars.splice(indexFrame, 1);
+          }
+          return {
+            success: driveMode.success,
+            idCar: car.id,
+            time: frame.time
+          }
+        }
+        return {
+          success: false,
+          idCar: 0,
+          time: 0
+        }
+      })
   }
 }

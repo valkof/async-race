@@ -27,6 +27,15 @@ export type CarsResponse = {
   carsGarage: Car[],
 }
 
+export type Engine = {
+  velocity: number,
+  distance: number
+}
+
+export type DriveMode = {
+  success: boolean
+}
+
 export type Winner = {
   id: number,
   wins: number,
@@ -51,4 +60,10 @@ export type Status = {
   newCar: CarQuery,
   idOldCar: number,
   oldCar: CarQuery
+}
+
+export type Finish = {
+  success: boolean,
+  idCar: number,
+  time: number
 }
