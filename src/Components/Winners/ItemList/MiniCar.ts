@@ -15,7 +15,8 @@ export class MiniCar extends BaseComponent implements IBaseInterface {
     const objectElement = this.element as HTMLObjectElement;
     objectElement.type = 'image/svg+xml';
     objectElement.data = '../assets/svg/car5.svg';
-    objectElement.width = '20';
+    objectElement.width = '20px';
+    objectElement.height = '13px';
     objectElement.style.left = '0px';
     objectElement.style.backgroundColor = this.car.color;
 

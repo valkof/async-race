@@ -1,9 +1,9 @@
 import { Observer } from "../Abstract/Observer";
-import { Car, FieldSort, Finish, NamesOfCars, OrderSort, Status } from "../Interfaces/Types";
+import { Car, FieldSort, Finish, NamesOfCars, Status } from "../Interfaces/Types";
 import { animation, carEngineDriveMode, carStartStopEngine } from "./DriveService";
 import { createCar, deleteCar, getCar, getCars, updateCar } from "./GarageService";
 import { getInitSettingsFromJSON, getNamesOfCarsFromJSON } from "./getSettings";
-import { getWinners } from "./WinnersService";
+import { addWinner, getWinners } from "./WinnersService";
 
 export class RaceService extends Observer {
   
@@ -218,7 +218,10 @@ export class RaceService extends Observer {
       const driveCars = this.status.carsGarage.map(car => this.race(car));
       this.raceAll(driveCars)
         .then(driveCar => {
-          console.log(driveCar);
+          addWinner(driveCar.idCar, driveCar.time)
+            .then(() => {
+              this.updateWinners();
+            })
         })
       
     })

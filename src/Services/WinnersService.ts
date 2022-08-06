@@ -17,9 +17,9 @@ export async function getWinners(
   };
 }
 
-export async function getWinner(idCar: number): Promise<Winner> {
-  const response = await fetch(`${winners}/${idCar}`);
-  return await response.json() as Winner;
+export async function getWinner(idCar: number): Promise<Winner[]> {
+  const response = await fetch(`${winners}?id=${idCar}`);
+  return await response.json() as Winner[];
 }
 
 export async function createWinner(body: Winner): Promise<Winner> {
@@ -45,4 +45,20 @@ export async function updateWinner(idCar: number, body: Wins): Promise<Winner> {
     headers: {'Content-Type': 'application/json'}
   });
   return await response.json() as Winner;
+}
+
+export async function addWinner(idCar: number, time: number): Promise<void> {
+  const winner = await getWinner(idCar);
+  if (winner.length > 0) {
+    if (time < winner[0].time) await updateWinner(idCar, {
+      wins: winner[0].wins + 1,
+      time: time
+    })
+  } else {
+    await createWinner({
+      id: idCar,
+      wins: 1,
+      time: time
+    })
+  }
 }
