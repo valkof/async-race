@@ -80,3 +80,16 @@ export type Finish = {
   name: string,
   time: number
 }
+
+export type ImageCars = {
+  [idCar: number]: HTMLElement
+}
+
+export type Animation = {
+  idFrame: number,
+  time: number
+}
+
+export type AnimationCars = {
+  [idCar: number]: Animation
+}

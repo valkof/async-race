@@ -1,5 +1,5 @@
 import { Observer } from "../Abstract/Observer";
-import { Car, FieldSort, Finish, NamesOfCars, Status } from "../Interfaces/Types";
+import { AnimationCars, Car, Engine, FieldSort, Finish, ImageCars, NamesOfCars, Status } from "../Interfaces/Types";
 import { animation, carEngineDriveMode, carStartStopEngine } from "./DriveService";
 import { createCar, deleteCar, getCar, getCars, updateCar } from "./GarageService";
 import { getInitSettingsFromJSON, getNamesOfCarsFromJSON } from "./getSettings";
@@ -11,9 +11,11 @@ export class RaceService extends Observer {
 
   private status = {} as Status;
 
-  private imageCars = [] as {idCar: number, image: HTMLElement}[];
+  private imagesCars = {} as ImageCars;
 
-  private animationCars = [] as {idCar: number, idFrame: number, time: number}[];
+  private animationCars = {} as AnimationCars;
+
+  private traceCars = [] as number[];
   
   constructor(namesOfCars: string) {
     super();
@@ -55,7 +57,7 @@ export class RaceService extends Observer {
     getCars(this.status.paginationGarage)
       .then(response => {
         Object.assign(this.status, response);
-        this.imageCars = [];
+        this.imagesCars = {};
         this.dispath('updateGarage', this.status);
       });
   }
@@ -173,110 +175,93 @@ export class RaceService extends Observer {
   }
 
   addImageCar(idCar: number, image: HTMLElement): void {
-    this.imageCars.push({
-      idCar: idCar,
-      image: image
-    })
+    Object.assign(this.imagesCars, { [idCar]: image });
   }
 
-  startAnimation(car: Car): void {
-    carStartStopEngine(car.id, 'started')
-      .then(engine => {
-        const image = this.imageCars.find(el => el.idCar === car.id);
-        if (image) {
-          this.animationCars.push(animation(image.image, car.id, engine));
-        }
-        this.race(car);
-        
-      })
+  async startDriveCar(car: Car): Promise<void> {
+    const engine = await carStartStopEngine(car.id, 'started');
+    this.startAnimationCar(car, engine);
+    const driveMode = await carEngineDriveMode(car.id);
+    await this.stopDriveCar(car);
+    if (!driveMode.success) this.breakDriveCar(car);
   }
 
-  carStopAnimation(car: Car): void {
-    carStartStopEngine(car.id, 'stopped')
-      .then(() => {
-        const indexFrame = this.animationCars.findIndex(el => el.idCar === car.id);
-        let frame;
-        if (indexFrame >= 0) frame = this.animationCars[indexFrame];
-        if (frame) {
-          window.cancelAnimationFrame(frame.idFrame);
-          const imageCar = this.imageCars.find(el => el.idCar === car.id);
-          if (imageCar) imageCar.image.style.left = '0px';
-          this.animationCars.splice(indexFrame, 1);
-        }
-      })
+  private startAnimationCar(car: Car, engine: Engine): void {
+    const imageCar = this.imagesCars[car.id];
+    if (imageCar) {
+      const animationCar = animation(imageCar, car.id, engine);
+      Object.assign(this.animationCars, animationCar);
+    }
   }
 
-  carsRace(): void {
-    const startCar = this.status.carsGarage.map(car => carStartStopEngine(car.id, 'started'));
-    Promise.all(startCar).then((engineCars) => {
-      this.status.carsGarage.forEach((car, i) => {
-        const image = this.imageCars.find(el => el.idCar === car.id);
-        if (image) {
-          this.animationCars.push(animation(image.image, car.id, engineCars[i]));
-        }
-      })
-      const driveCars = this.status.carsGarage.map(car => this.race(car));
-      this.raceAll(driveCars)
-        .then(driveCar => {
-          this.status.winner = driveCar;
-          this.dispath('winnerGame', this.status);
-          addWinner(driveCar.idCar, driveCar.time)
-            .then(() => {
-              this.updateWinners();
-            })
-        })
-      
-    })
+  async restartDriveCar(car: Car): Promise<void> {
+    await this.stopDriveCar(car);
+    this.resetAnimationCar(car);
   }
 
-  private raceAll(driveCars: Promise<Finish>[]): Promise<Finish> {
+  async stopDriveCar(car: Car): Promise<void> {
+    await carStartStopEngine(car.id, 'stopped');
+    this.stopAnimationCar(car);
+  }
+
+  private stopAnimationCar(car: Car): void {
+    const animationCar = this.animationCars[car.id];
+    if (animationCar) {
+      const idFrame = animationCar.idFrame;
+      window.cancelAnimationFrame(idFrame);
+    }
+  }
+
+  private resetAnimationCar(car: Car): void {
+    this.imagesCars[car.id].style.left = '0px';
+    this.imagesCars[car.id].style.transform = 'rotate(0deg)';
+    delete this.animationCars[car.id];
+  }
+
+  breakDriveCar(car: Car): void {
+    this.imagesCars[car.id].style.transform = 'rotate(180deg)';
+  }
+
+  async carsRace(): Promise<void> {
+    const startCars = this.status.carsGarage.map(car => carStartStopEngine(car.id, 'started'));
+    const engines = await Promise.all(startCars);
+    this.status.carsGarage.forEach((car, i) => this.startAnimationCar(car, engines[i]));
+    this.traceCars = this.status.carsGarage.map(el => el.id);
+    const driveCars = this.status.carsGarage.map(car => this.raceCar(car));
+    const driveCar = await this.raceCars(driveCars);
+    this.status.winner = driveCar;
+    this.dispath('winnerGame', this.status);
+    await addWinner(driveCar.idCar, driveCar.time)
+    this.updateWinners();
+  }
+
+  private async raceCars(driveCars: Promise<Finish>[]): Promise<Finish> {
     return new Promise((resolve) => {
       Promise.race(driveCars)
         .then(driveCar => {
-          
           if (!driveCar.success) {
-            const indexFrame = this.animationCars.findIndex(el => el.idCar === driveCar.idCar);
-            this.animationCars.splice(indexFrame, 1);
-            driveCars.splice(indexFrame, 1);
-            resolve(this.raceAll(driveCars));
+            const indexCar = this.traceCars.findIndex(el => el === driveCar.idCar);
+            this.traceCars.splice(indexCar, 1);
+            delete this.animationCars[driveCar.idCar];
+            driveCars.splice(indexCar, 1);
+            resolve(this.raceCars(driveCars));
           }
 
           resolve(driveCar);
         })
-
     })
   }
 
-  private async race(car: Car): Promise<Finish> {
-    return carEngineDriveMode(car.id)
-      .then(driveMode => {
-        const indexFrame = this.animationCars.findIndex(el => el.idCar === car.id);
-        let frame;
-        if (indexFrame >= 0) frame = this.animationCars[indexFrame];
-        
-        if (frame) {
-          if (!driveMode.success) {
-            window.cancelAnimationFrame(frame.idFrame);
-            const imageCar = this.imageCars.find(image => image.idCar === car.id);
-            if (imageCar) {
-              imageCar.image.style.transform = 'rotate(180deg)';
-            }
-            // this.animationCars.splice(indexFrame, 1);
-          }
-          return {
-            success: driveMode.success,
-            idCar: car.id,
-            name: car.name,
-            time: frame.time
-          } as Finish
-        }
-        return {
-          success: false,
-          idCar: 0,
-          name: '',
-          time: 0
-        } as Finish
-      })
+  private async raceCar(car: Car): Promise<Finish> {
+    const driveMode = await carEngineDriveMode(car.id);
+    await this.stopDriveCar(car);
+    if (!driveMode.success) this.breakDriveCar(car);
+    return {
+      success: driveMode.success,
+      idCar: car.id,
+      name: car.name,
+      time: this.animationCars[car.id].time
+    } as Finish
   }
 
   resetCarsRace(): void {

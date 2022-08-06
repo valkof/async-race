@@ -11,7 +11,7 @@ export class ButtonStart extends ElementButton implements IBaseInterface {
     this.parent.appendChild(this.element);
 
     this.element.addEventListener('click', () => {
-      this.services.Race.startAnimation(this.car);
+      this.services.Race.startDriveCar(this.car);
     })
   }
 }
