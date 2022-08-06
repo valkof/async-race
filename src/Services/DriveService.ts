@@ -15,8 +15,7 @@ export async function carEngineDriveMode(idCar: number, status = 'drive'): Promi
   const response = await fetch(`${engine}?id=${idCar}&status=${status}`, {
     method: 'PATCH'
   });
-  if (response.status >= 300) {
-    console.log(`break ${idCar}`);
+  if (response.status === 500) {
     return Promise.resolve({
       success: false
     });

@@ -115,7 +115,7 @@ export class RaceService extends Observer {
         && this.status.paginationGarage > 1) {
           this.status.paginationGarage -= 1;
         }
-        this.updateGarage();
+        this.updatePages();
       })
   }
 
@@ -218,6 +218,8 @@ export class RaceService extends Observer {
       const driveCars = this.status.carsGarage.map(car => this.race(car));
       this.raceAll(driveCars)
         .then(driveCar => {
+          this.status.winner = driveCar;
+          this.dispath('winnerGame', this.status);
           addWinner(driveCar.idCar, driveCar.time)
             .then(() => {
               this.updateWinners();
@@ -254,7 +256,6 @@ export class RaceService extends Observer {
         
         if (frame) {
           if (!driveMode.success) {
-            // console.log(`loose - ${frame.time}`);
             window.cancelAnimationFrame(frame.idFrame);
             const imageCar = this.imageCars.find(image => image.idCar === car.id);
             if (imageCar) {
@@ -265,14 +266,27 @@ export class RaceService extends Observer {
           return {
             success: driveMode.success,
             idCar: car.id,
+            name: car.name,
             time: frame.time
-          }
+          } as Finish
         }
         return {
           success: false,
           idCar: 0,
+          name: '',
           time: 0
-        }
+        } as Finish
       })
+  }
+
+  resetCarsRace(): void {
+    this.animationCars = [];
+    this.status.winner = {
+      success: false,
+      idCar: 0,
+      name: '',
+      time: 0
+    } as Finish;
+    this.updateGarage()
   }
 }

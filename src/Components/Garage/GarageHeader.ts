@@ -1,6 +1,7 @@
 import { BaseComponent } from "../../Abstract/BaseComponent";
 import { IBaseInterface } from "../../Interfaces/Interfaces";
 import { Services, Status } from "../../Interfaces/Types";
+import { MessageWinner } from "./MessageWinner";
 
 export class GarageHeader extends BaseComponent implements IBaseInterface {
   constructor(private readonly parent: HTMLElement, private readonly services: Services) {
@@ -15,6 +16,8 @@ export class GarageHeader extends BaseComponent implements IBaseInterface {
     
     this.element.appendChild(h2.element);
     this.element.appendChild(span.element);
+
+    new MessageWinner(this.element, this.services).render();
 
     this.parent.appendChild(this.element);
     

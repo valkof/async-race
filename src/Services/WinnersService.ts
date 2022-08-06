@@ -22,7 +22,7 @@ export async function getWinner(idCar: number): Promise<Winner[]> {
   return await response.json() as Winner[];
 }
 
-export async function createWinner(body: Winner): Promise<Winner> {
+async function createWinner(body: Winner): Promise<Winner> {
   const response = await fetch(winners, {
     method: 'POST',
     body: JSON.stringify(body),
@@ -38,7 +38,7 @@ export async function deleteWinner(idCar: number): Promise<Winner> {
   return response.json();
 }
 
-export async function updateWinner(idCar: number, body: Wins): Promise<Winner> {
+async function updateWinner(idCar: number, body: Wins): Promise<Winner> {
   const response = await fetch(`${winners}/${idCar}`, {
     method: 'PUT',
     body: JSON.stringify(body),

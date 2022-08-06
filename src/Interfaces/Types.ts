@@ -70,11 +70,13 @@ export type Status = {
   carsWinners: CarWinner[],
   newCar: DataCar,
   idOldCar: number,
-  oldCar: DataCar
+  oldCar: DataCar,
+  winner: Finish
 }
 
 export type Finish = {
   success: boolean,
   idCar: number,
+  name: string,
   time: number
 }

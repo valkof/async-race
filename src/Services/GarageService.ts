@@ -1,4 +1,5 @@
 import { Car, Cars, DataCar } from "../Interfaces/Types";
+import { deleteWinner, getWinner } from "./WinnersService";
 
 const host = 'http://127.0.0.1:3000';
 
@@ -36,9 +37,17 @@ export async function updateCar(idCar: number, body: DataCar): Promise<Car> {
   return await response.json() as Car;
 }
 
-export async function deleteCar(id: number): Promise<Car> {
+async function removeCar(id: number): Promise<Car> {
   const response = await fetch(`${garage}/${id}`, {
     method: 'DELETE'
   });
   return await response.json() as Car;
+}
+
+export async function deleteCar(idCar: number): Promise<void> {
+  const winner = await getWinner(idCar);
+  if (winner.length > 0) {
+    await deleteWinner(idCar);
+  }
+  await removeCar(idCar);
 }

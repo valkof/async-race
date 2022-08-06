@@ -12,5 +12,11 @@
   "oldCar": {
     "name": "",
     "color": "#2548D4"
+  },
+  "winner": {
+    "success": false,
+    "idCar": 0,
+    "name": "",
+    "time": 0
   }
 }
