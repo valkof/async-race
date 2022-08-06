@@ -1,5 +1,5 @@
 import { IBaseInterface } from "../../../Interfaces/Interfaces";
-import { Services } from "../../../Interfaces/Types";
+import { Services, Status } from "../../../Interfaces/Types";
 import { ElementButton } from "../../Elements/ElementButton";
 
 export class ButtonRace extends ElementButton implements IBaseInterface {
@@ -12,6 +12,14 @@ export class ButtonRace extends ElementButton implements IBaseInterface {
     
     this.element.addEventListener('click', () => {
       this.services.Race.carsRace();
+    })
+
+    this.services.Race.addListener('game', (status: Status) => {
+      this.element.disabled = !(status.game === 'restart');
+    })
+
+    this.services.Race.addListener('updateGarage', (status: Status) => {
+      this.element.disabled = !(status.game === 'restart');
     })
   }
 }

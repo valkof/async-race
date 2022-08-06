@@ -1,5 +1,5 @@
 import { IBaseInterface } from "../../../Interfaces/Interfaces";
-import { Car, Services } from "../../../Interfaces/Types";
+import { Car, Services, Status } from "../../../Interfaces/Types";
 import { ElementButton } from "../../Elements/ElementButton";
 
 export class ButtonRemove extends ElementButton implements IBaseInterface {
@@ -13,6 +13,14 @@ export class ButtonRemove extends ElementButton implements IBaseInterface {
     this.element.addEventListener('click', () => {
       this.element.disabled = true;
       this.services.Race.deleteOldCar(this.car.id);
+    })
+
+    this.services.Race.addListener('game', (status: Status) => {
+      this.element.disabled = !(status.game === 'restart');
+    })
+
+    this.services.Race.addListener('updateGarage', (status: Status) => {
+      this.element.disabled = !(status.game === 'restart');
     })
   }
 }

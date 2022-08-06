@@ -71,7 +71,8 @@ export type Status = {
   newCar: DataCar,
   idOldCar: number,
   oldCar: DataCar,
-  winner: Finish
+  winner: Finish,
+  game: 'start' | 'stop' | 'restart'
 }
 
 export type Finish = {

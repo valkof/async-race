@@ -223,6 +223,8 @@ export class RaceService extends Observer {
   }
 
   async carsRace(): Promise<void> {
+    this.status.game = 'start';
+    this.dispath('game', this.status);
     const startCars = this.status.carsGarage.map(car => carStartStopEngine(car.id, 'started'));
     const engines = await Promise.all(startCars);
     this.status.carsGarage.forEach((car, i) => this.startAnimationCar(car, engines[i]));
@@ -233,6 +235,9 @@ export class RaceService extends Observer {
     this.dispath('winnerGame', this.status);
     await addWinner(driveCar.idCar, driveCar.time)
     this.updateWinners();
+    await Promise.all(driveCars);
+    this.status.game = 'stop';
+    this.dispath('game', this.status);
   }
 
   private async raceCars(driveCars: Promise<Finish>[]): Promise<Finish> {
@@ -265,13 +270,14 @@ export class RaceService extends Observer {
   }
 
   resetCarsRace(): void {
-    this.animationCars = [];
+    this.animationCars = {};
     this.status.winner = {
       success: false,
       idCar: 0,
       name: '',
       time: 0
     } as Finish;
+    this.status.game = 'restart';
     this.updateGarage()
   }
 }

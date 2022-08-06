@@ -1,5 +1,5 @@
 import { IBaseInterface } from "../../../Interfaces/Interfaces";
-import { Car, Services } from "../../../Interfaces/Types";
+import { Car, Services, Status } from "../../../Interfaces/Types";
 import { ElementButton } from "../../Elements/ElementButton";
 
 export class ButtonStop extends ElementButton implements IBaseInterface {
@@ -8,10 +8,12 @@ export class ButtonStop extends ElementButton implements IBaseInterface {
   }
 
   render(): void {
+    this.element.disabled = true;
     this.parent.appendChild(this.element);
 
     this.element.addEventListener('click', () => {
       this.services.Race.restartDriveCar(this.car);
     })
+
   }
 }

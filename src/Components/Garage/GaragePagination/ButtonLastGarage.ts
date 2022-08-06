@@ -17,5 +17,9 @@ export class ButtonLastGarage extends ElementButton implements IBaseInterface {
     this.services.Race.addListener('updateGarage', (status: Status) => {
       this.element.disabled = !(status.paginationGarage > 1);
     })
+
+    this.services.Race.addListener('game', (status: Status) => {
+      this.element.disabled = !(status.game === 'restart');
+    })
   }
 }
