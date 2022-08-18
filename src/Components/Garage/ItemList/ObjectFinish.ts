@@ -1,17 +1,16 @@
 import { BaseComponent } from "../../../Abstract/BaseComponent";
 import { IBaseInterface } from "../../../Interfaces/Interfaces";
 import { Car, Services } from "../../../Interfaces/Types";
-import { ObjectCar } from "./ObjectCar";
-import { ObjectFinish } from "./ObjectFinish";
 
-export class RoadCar extends BaseComponent implements IBaseInterface {
+export class ObjectFinish extends BaseComponent implements IBaseInterface {
   constructor(private readonly parent: HTMLElement, private readonly services: Services, private readonly car: Car) {
-    super('div', ['item__road']);
+    super('object', ['finish_svg']);
   }
 
   render(): void {
-    new ObjectCar(this.element, this.services, this.car).render();
-    new ObjectFinish(this.element, this.services, this.car).render();
+    const objectElement = this.element as HTMLObjectElement;
+    objectElement.type = 'image/svg+xml';
+    objectElement.data = './assets/svg/flag.svg';
 
     this.parent.appendChild(this.element);
   }

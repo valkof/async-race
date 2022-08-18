@@ -10,7 +10,7 @@ export class ObjectCar extends BaseComponent implements IBaseInterface {
   render(): void {
     const objectElement = this.element as HTMLObjectElement;
     objectElement.type = 'image/svg+xml';
-    objectElement.data = '../assets/svg/car5.svg';
+    objectElement.data = './assets/svg/car5.svg';
     objectElement.width = '50px';
     objectElement.height = '31px';
     objectElement.style.left = '0px';

@@ -16,6 +16,8 @@ export class RaceService extends Observer {
   private animationCars = {} as AnimationCars;
 
   private traceCars = [] as number[];
+
+  private countMiniRace = 0;
   
   constructor(namesOfCars: string) {
     super();
@@ -57,6 +59,7 @@ export class RaceService extends Observer {
     getCars(this.status.paginationGarage)
       .then(response => {
         Object.assign(this.status, response);
+        this.countMiniRace = response.carsGarage.length;
         this.imagesCars = {};
         this.dispath('updateGarage', this.status);
       });
@@ -106,7 +109,7 @@ export class RaceService extends Observer {
     updateCar(this.status.idOldCar, this.status.oldCar)
       .then(() => {
         this.status.oldCar.name = '';
-        this.updateGarage();
+        this.updatePages();
       });
   }
 
@@ -178,12 +181,16 @@ export class RaceService extends Observer {
     Object.assign(this.imagesCars, { [idCar]: image });
   }
 
-  async startDriveCar(car: Car): Promise<void> {
+  async startDriveCar(car: Car, callback: (stage: 'drive' | 'finish') => void): Promise<void> {
     const engine = await carStartStopEngine(car.id, 'started');
     this.startAnimationCar(car, engine);
+    callback('drive');
     const driveMode = await carEngineDriveMode(car.id);
+    if (this.imagesCars[car.id].style.left !== '0px') {
+      if (!driveMode.success) this.breakDriveCar(car);
+    }
     await this.stopDriveCar(car);
-    if (!driveMode.success) this.breakDriveCar(car);
+    callback('finish');
   }
 
   private startAnimationCar(car: Car, engine: Engine): void {
@@ -194,14 +201,15 @@ export class RaceService extends Observer {
     }
   }
 
-  async restartDriveCar(car: Car): Promise<void> {
-    await this.stopDriveCar(car);
+  async restartDriveCar(car: Car, callback: (stage: 'stop') => void): Promise<void> {
+    this.stopAnimationCar(car);
     this.resetAnimationCar(car);
+    callback('stop');
   }
 
   async stopDriveCar(car: Car): Promise<void> {
-    await carStartStopEngine(car.id, 'stopped');
     this.stopAnimationCar(car);
+    await carStartStopEngine(car.id, 'stopped');
   }
 
   private stopAnimationCar(car: Car): void {
@@ -231,6 +239,11 @@ export class RaceService extends Observer {
     this.traceCars = this.status.carsGarage.map(el => el.id);
     const driveCars = this.status.carsGarage.map(car => this.raceCar(car));
     const driveCar = await this.raceCars(driveCars);
+    if (!driveCar.success) {
+      this.status.game = 'stop';
+      this.dispath('game', this.status);
+      return;
+    }
     this.status.winner = driveCar;
     this.dispath('winnerGame', this.status);
     await addWinner(driveCar.idCar, driveCar.time)
@@ -249,6 +262,12 @@ export class RaceService extends Observer {
             this.traceCars.splice(indexCar, 1);
             delete this.animationCars[driveCar.idCar];
             driveCars.splice(indexCar, 1);
+            if (this.traceCars.length === 0) resolve({
+              success: false,
+              idCar: 0,
+              name: '',
+              time: 0
+            });
             resolve(this.raceCars(driveCars));
           }
 
@@ -259,8 +278,8 @@ export class RaceService extends Observer {
 
   private async raceCar(car: Car): Promise<Finish> {
     const driveMode = await carEngineDriveMode(car.id);
-    await this.stopDriveCar(car);
     if (!driveMode.success) this.breakDriveCar(car);
+    await this.stopDriveCar(car);
     return {
       success: driveMode.success,
       idCar: car.id,
@@ -279,5 +298,24 @@ export class RaceService extends Observer {
     } as Finish;
     this.status.game = 'restart';
     this.updateGarage()
+  }
+
+  isBeginRace(): void {
+    // let count = 0;
+    // for (const key in this.imagesCars) {
+    //   if (this.imagesCars[key].style.left === '0px') count += 1
+    // }
+    this.countMiniRace += 1;
+    const beginRace = this.countMiniRace === Object.keys(this.imagesCars).length;
+    if (beginRace) {
+      this.dispath('miniRace', this.status, 'start');
+    } else {
+      this.dispath('miniRace', this.status, 'stop');
+    }
+  }
+
+  stopRace(): void {
+    this.countMiniRace -= 1;
+    this.dispath('miniRace', this.status, 'stop');
   }
 }

@@ -19,7 +19,11 @@ export class ButtonRace extends ElementButton implements IBaseInterface {
     })
 
     this.services.Race.addListener('updateGarage', (status: Status) => {
-      this.element.disabled = !(status.game === 'restart');
+      this.element.disabled = !(status.game === 'restart') || status.carsGarage.length === 0;
+    })
+
+    this.services.Race.addListener('miniRace', (status: Status, start: string) => {
+      this.element.disabled = !(start === 'start');
     })
   }
 }

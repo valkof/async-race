@@ -1,3 +1,4 @@
+import { ItemService } from "../Services/ItemService";
 import { RaceService } from "../Services/RaceService";
 
 export type NamesOfCars = {
@@ -10,6 +11,11 @@ export type NamesOfCars = {
 export type Services = {
   Race: RaceService;
 }
+
+export type ServiceItem = {
+  Item: ItemService;
+}
+
 export type DataCar = {
   name: string,
   color: string

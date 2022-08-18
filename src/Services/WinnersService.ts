@@ -50,9 +50,9 @@ async function updateWinner(idCar: number, body: Wins): Promise<Winner> {
 export async function addWinner(idCar: number, time: number): Promise<void> {
   const winner = await getWinner(idCar);
   if (winner.length > 0) {
-    if (time < winner[0].time) await updateWinner(idCar, {
+    await updateWinner(idCar, {
       wins: winner[0].wins + 1,
-      time: time
+      time: time < winner[0].time ? time : winner[0].time
     })
   } else {
     await createWinner({

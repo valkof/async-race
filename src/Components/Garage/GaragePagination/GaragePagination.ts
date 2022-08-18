@@ -1,6 +1,6 @@
 import { BaseComponent } from "../../../Abstract/BaseComponent";
 import { IBaseInterface } from "../../../Interfaces/Interfaces";
-import { Services } from "../../../Interfaces/Types";
+import { Services, Status } from "../../../Interfaces/Types";
 import { ButtonLastGarage } from "./ButtonLastGarage";
 import { ButtonNextGarage } from "./ButtonNextGarage";
 import { SpanPageGarage } from "./SpanPageGarage";
@@ -16,5 +16,13 @@ export class GaragePagination extends BaseComponent implements IBaseInterface {
     new ButtonNextGarage(this.element, this.services).render();
 
     this.parent.appendChild(this.element);
+
+    this.services.Race.addListener('miniRace', (status: Status, start: string) => {
+      if (start === 'stop') {
+        this.element.classList.add('disabled');
+      } else {
+        this.element.classList.remove('disabled');
+      };
+    })
   }
 }

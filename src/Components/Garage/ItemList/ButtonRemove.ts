@@ -1,9 +1,14 @@
 import { IBaseInterface } from "../../../Interfaces/Interfaces";
-import { Car, Services, Status } from "../../../Interfaces/Types";
+import { Car, ServiceItem, Services } from "../../../Interfaces/Types";
 import { ElementButton } from "../../Elements/ElementButton";
 
 export class ButtonRemove extends ElementButton implements IBaseInterface {
-  constructor(private readonly parent: HTMLElement, private readonly services: Services, private readonly car: Car) {
+  constructor(
+    private readonly parent: HTMLElement,
+    private readonly services: Services,
+    private readonly car: Car,
+    private readonly serviceItem: ServiceItem
+  ) {
     super('Remove');
   }
 
@@ -15,12 +20,8 @@ export class ButtonRemove extends ElementButton implements IBaseInterface {
       this.services.Race.deleteOldCar(this.car.id);
     })
 
-    this.services.Race.addListener('game', (status: Status) => {
-      this.element.disabled = !(status.game === 'restart');
-    })
-
-    this.services.Race.addListener('updateGarage', (status: Status) => {
-      this.element.disabled = !(status.game === 'restart');
+    this.serviceItem.Item.addListener('stageGame', (stage: string) => {
+      this.element.disabled = 'stop' !== stage;
     })
   }
 }

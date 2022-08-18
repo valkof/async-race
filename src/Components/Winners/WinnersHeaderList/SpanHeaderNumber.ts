@@ -1,6 +1,6 @@
 import { BaseComponent } from "../../../Abstract/BaseComponent";
 import { IBaseInterface } from "../../../Interfaces/Interfaces";
-import { Services, Status } from "../../../Interfaces/Types";
+import { Services } from "../../../Interfaces/Types";
 
 export class SpanHeaderNumber extends BaseComponent implements IBaseInterface {
   constructor(private readonly parent: HTMLElement, private readonly services: Services) {
