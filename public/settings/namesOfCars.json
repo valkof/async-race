@@ -1,0 +1,24 @@
+{
+  "cars": [
+    {"brand": "Audi",
+    "models": ["A3", "A4", "A5", "A6", "A7", "A8", "RS 6", "SQ8", "Q8", "E-tron"]},
+    {"brand": "BMW",
+    "models": ["M2", "7", "8", "3", "5", "M8", "M5", "X1", "X2", "X3"]},
+    {"brand": "FORD",
+    "models": ["Transit", "Tourneo", "Aerostar", "Aspire", "Bronco", "C-Max", "Contour", "Cougar", "Victoria", "Econoline"]},
+    {"brand": "Honda",
+    "models": ["Pilot", "CR-V", "Accord", "Avancier", "Capa", "City", "Civic", "Fit", "Freed", "Jazz"]},
+    {"brand": "Hyundai",
+    "models": ["Solaris", "Elantra", "Sonata", "i30", "Palisade", "Creta", "Tucson", "Santa", "H1", "Atos"]},
+    {"brand": "Kia",
+    "models": ["K900", "Cerato", "Rio", "K5", "Stinger", "cee'd", "Picanto", "Seltos", "Mohave", "Soul"]},
+    {"brand": "Mazda",
+    "models": ["CX-30", "CX-5", "CX-9", "121", "2", "3", "323", "626", "6", "5"]},
+    {"brand": "Mercedes",
+    "models": ["CLA AMG", "CLS", "S", "Maybach", "A", "C AMG", "E AMG", "AMG GT", "E", "GLB"]},
+    {"brand": "Mitsubishi",
+    "models": ["Eclipse", "ASX", "Pajero Sport", "Outlander", "L200", "3000 GT", "Airtrek", "Carisma", "Canter", "Chariot"]},
+    {"brand": "Nissan",
+    "models": ["Ariya", "Qashqai", "Murano", "Terrano", "X-Trail", "200 SX", "300 ZX", "350 Z", "Almera", "AD"]}
+  ]
+}

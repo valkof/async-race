@@ -1,0 +1,41 @@
+section {
+  padding: 10px;
+}
+
+.deactive {
+  display: none;
+}
+
+.section__header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.span_winner_race {
+  margin: auto;
+  font-size: 18px;
+}
+
+.section__pagination {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 10px;
+}
+
+.section__header_list {
+  display: grid;
+  width: 400px;
+  grid-template-columns: 1fr 1fr 3fr 1fr 1fr;
+
+  span {
+    text-align: center;
+  }
+
+  .section__pagination__span_number,
+  .section__pagination__span_wins,
+  .section__pagination__span_time {
+    cursor: pointer;
+  }
+}

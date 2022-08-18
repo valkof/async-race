@@ -1,0 +1,23 @@
+{
+  "currentPage": "garage",
+  "paginationGarage": 1,
+  "paginationWinners": 1,
+  "fieldSort": "id",
+  "orderSort": "ASC",
+  "newCar": {
+    "name": "",
+    "color": "#2548D4"
+  },
+  "idOldCar": 1,
+  "oldCar": {
+    "name": "",
+    "color": "#2548D4"
+  },
+  "winner": {
+    "success": false,
+    "idCar": 0,
+    "name": "",
+    "time": 0
+  },
+  "game": "restart"
+}

@@ -1,0 +1,14 @@
+input.input {
+  width: 150px;
+  padding: 0px 5px;
+}
+
+input.color {
+    width: 20px;
+    height: 20px;
+    -webkit-appearance: none;
+
+    &::-webkit-color-swatch-wrapper {
+      padding: 1px;
+    }
+}

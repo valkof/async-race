@@ -1,0 +1,52 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  html {
+    font-size: 10px;
+  }
+  
+  body {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.4rem;
+    background-color: black;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    min-width: 500px;
+    &::-webkit-scrollbar {
+      width: 0px;
+  }
+  }
+
+  h1 {
+    margin: 0px;
+  }
+
+  h3 {
+    text-align: center;
+    width: 100%;
+    font-size: 28px;
+    font-stretch: condensed;
+    padding-left: 10px;
+    min-height: 20px;
+    margin: 15px 0;
+    text-align: center;
+  }
+
+  h4 {
+    text-align: center;
+    width: 100%;
+    font-size: 20px;
+    font-stretch: condensed;
+    padding-left: 10px;
+    min-height: 20px;
+    margin: 15px 0;
+  }
+
+  .disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
